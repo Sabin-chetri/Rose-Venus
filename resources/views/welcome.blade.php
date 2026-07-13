@@ -19,6 +19,7 @@
                     <span class="text-2xl lg:text-3xl font-[Playfair_Display] font-light tracking-wider text-stone-700">Venus</span>
                 </a>
                 <div class="hidden lg:flex items-center gap-10">
+                    <a href="{{ route('shop.index') }}" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Shop</a>
                     <a href="#collections" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Collections</a>
                     <a href="#about" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Our Story</a>
                     <a href="#featured" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Featured</a>
@@ -40,6 +41,7 @@
         {{-- Mobile Menu --}}
         <div x-show="mobileOpen" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" @click.outside="mobileOpen = false" class="lg:hidden bg-white/95 backdrop-blur-xl border-t border-stone-100 shadow-xl">
             <div class="px-6 py-8 space-y-6">
+                <a @click="mobileOpen = false" href="{{ route('shop.index') }}" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Shop</a>
                 <a @click="mobileOpen = false" href="#collections" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Collections</a>
                 <a @click="mobileOpen = false" href="#about" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Our Story</a>
                 <a @click="mobileOpen = false" href="#featured" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Featured</a>
