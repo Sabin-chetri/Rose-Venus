@@ -69,35 +69,35 @@
                             <a href="{{ route('shop.index') }}" class="inline-flex mt-4 px-6 py-2.5 bg-rose-800 hover:bg-rose-900 text-white text-sm font-medium rounded-full transition-colors">Clear Filters</a>
                         </div>
                     @else
-                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                             @foreach ($products as $product)
-                                <a href="{{ route('shop.show', $product) }}" class="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                                    <div class="aspect-[4/3] bg-gradient-to-br from-rose-50 via-white to-rose-50/80 relative overflow-hidden">
+                                <a href="{{ route('shop.show', $product) }}" class="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
+                                    <div class="h-36 bg-gradient-to-br from-rose-50 via-white to-rose-50/80 relative overflow-hidden">
                                         @if ($product->image)
-                                            <img src="{{ Storage::url($product->image) }}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                         @else
                                             <div class="absolute inset-0 flex items-center justify-center">
-                                                <div class="w-16 h-20 rounded-full bg-gradient-to-b from-rose-200 to-rose-300"></div>
+                                                <div class="w-10 h-14 rounded-full bg-gradient-to-b from-rose-200 to-rose-300"></div>
                                             </div>
                                         @endif
                                         @if ($product->hasSale())
-                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-rose-500 text-white text-xs font-medium rounded-full">Sale</span>
+                                            <span class="absolute top-2 left-2 px-2 py-0.5 bg-rose-500 text-white text-[10px] font-medium rounded-full">Sale</span>
                                         @endif
                                         @if (!$product->is_active || $product->stock === 0)
                                             <div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
-                                                <span class="px-3 py-1.5 bg-gray-900/80 text-white text-xs font-medium rounded-full">Out of Stock</span>
+                                                <span class="px-2.5 py-1 bg-gray-900/80 text-white text-[10px] font-medium rounded-full">Out of Stock</span>
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="p-5">
+                                    <div class="p-4">
                                         <p class="text-xs text-gray-400 mb-1">{{ $product->category->name }}</p>
-                                        <h3 class="font-medium text-gray-900 group-hover:text-rose-700 transition-colors">{{ $product->name }}</h3>
+                                        <h3 class="text-sm font-semibold text-gray-900 group-hover:text-rose-700 transition-colors leading-snug">{{ $product->name }}</h3>
                                         <div class="mt-2 flex items-center gap-2">
                                             @if ($product->hasSale())
-                                                <span class="text-lg font-bold text-rose-600">Rp {{ number_format($product->sale_price, 0, ',', '.') }}</span>
-                                                <span class="text-sm text-gray-400 line-through">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                                <span class="text-sm font-bold text-rose-600">Rp {{ number_format($product->sale_price, 0, ',', '.') }}</span>
+                                                <span class="text-xs text-gray-400 line-through">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                                             @else
-                                                <span class="text-lg font-bold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                                <span class="text-sm font-bold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                                             @endif
                                         </div>
                                     </div>

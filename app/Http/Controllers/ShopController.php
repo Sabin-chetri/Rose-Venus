@@ -43,7 +43,7 @@ class ShopController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         return view('shop.index', compact('categories', 'products'));
     }
@@ -71,9 +71,29 @@ class ShopController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         return view('shop.index', compact('categories', 'products', 'category'));
+    }
+
+    public function collection(Category $category): View
+    {
+        $categories = Category::where('is_active', true)->get();
+
+        $featured = Product::with('category')
+            ->where('category_id', $category->id)
+            ->where('is_active', true)
+            ->where('is_featured', true)
+            ->take(4)
+            ->get();
+
+        $products = Product::with('category')
+            ->where('category_id', $category->id)
+            ->where('is_active', true)
+            ->latest()
+            ->paginate(10);
+
+        return view('shop.collection', compact('category', 'categories', 'featured', 'products'));
     }
 
     public function show(Product $product): View

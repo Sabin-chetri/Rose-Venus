@@ -20,7 +20,7 @@
                 {{-- Image --}}
                 <div class="aspect-[4/5] rounded-3xl bg-gradient-to-br from-rose-50 via-white to-rose-50/80 overflow-hidden shadow-lg relative">
                     @if ($product->image)
-                        <img src="{{ Storage::url($product->image) }}" alt="" class="w-full h-full object-cover">
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @else
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="w-32 h-44 rounded-full bg-gradient-to-b from-rose-200 via-rose-300 to-rose-400/60 shadow-inner"></div>
@@ -153,7 +153,7 @@
                             <a href="{{ route('shop.show', $item) }}" class="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                 <div class="aspect-[4/3] bg-gradient-to-br from-rose-50 via-white to-rose-50/80 relative overflow-hidden">
                                     @if ($item->image)
-                                        <img src="{{ Storage::url($item->image) }}" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                     @else
                                         <div class="absolute inset-0 flex items-center justify-center">
                                             <div class="w-12 h-16 rounded-full bg-gradient-to-b from-rose-200 to-rose-300"></div>

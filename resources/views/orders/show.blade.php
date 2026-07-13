@@ -42,7 +42,7 @@
                             <div class="flex items-center gap-4">
                                 <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100 flex-shrink-0 overflow-hidden">
                                     @if ($item->product && $item->product->image)
-                                        <img src="{{ Storage::url($item->product->image) }}" alt="" class="w-full h-full object-cover">
+                                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <div class="w-6 h-8 rounded-full bg-gradient-to-b from-rose-200 to-rose-300"></div>

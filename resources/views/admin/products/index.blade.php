@@ -40,7 +40,7 @@
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-100 to-rose-200 flex-shrink-0 flex items-center justify-center text-xs text-rose-600 font-medium">
                                                 @if ($product->image)
-                                                    <img src="{{ Storage::url($product->image) }}" alt="" class="w-full h-full object-cover rounded-lg">
+                                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-lg">
                                                 @else
                                                     {{ substr($product->name, 0, 2) }}
                                                 @endif
