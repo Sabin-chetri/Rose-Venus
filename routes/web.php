@@ -15,9 +15,6 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('shop.index');
-    }
     return view('welcome');
 })->name('home');
 
