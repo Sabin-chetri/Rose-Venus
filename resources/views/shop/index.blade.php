@@ -1,10 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ isset($category) ? $category->name : 'Shop' }}
-        </h2>
-    </x-slot>
-
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8">
@@ -12,11 +6,11 @@
                 <aside class="lg:w-56 flex-shrink-0">
                     <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-4">Categories</h3>
                     <div class="flex lg:flex-col flex-wrap gap-2">
-                        <a href="{{ route('shop.index') }}" class="px-4 py-2 text-sm rounded-lg transition-colors {{ !isset($category) ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <a href="{{ route('shop.index') }}{{ request('brand') ? '?brand=' . request('brand') : '' }}" class="px-4 py-2 text-sm rounded-lg transition-colors {{ !isset($category) ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
                             All Products
                         </a>
                         @foreach ($categories as $cat)
-                            <a href="{{ route('shop.category', $cat) }}" class="px-4 py-2 text-sm rounded-lg transition-colors {{ isset($category) && $category->id === $cat->id ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                            <a href="{{ route('shop.category', $cat) }}{{ request('brand') ? '?brand=' . request('brand') : '' }}" class="px-4 py-2 text-sm rounded-lg transition-colors {{ isset($category) && $category->id === $cat->id ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
                                 {{ $cat->name }}
                             </a>
                         @endforeach
@@ -26,15 +20,38 @@
                     <form method="GET" action="{{ route('shop.index') }}" class="mt-6">
                         <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-3">Search</h3>
                         <div class="relative">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..." class="w-full px-4 py-2.5 pl-10 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products or brand..." class="w-full px-4 py-2.5 pl-10 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all">
                             <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         </div>
                     </form>
+
+                    {{-- Brand Filter --}}
+                    @if ($brands->isNotEmpty())
+                        @php $route = isset($category) ? route('shop.category', $category) : route('shop.index'); @endphp
+                        <div class="mt-6">
+                            <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-3">Brand</h3>
+                            <div class="space-y-1">
+                                <a href="{{ $route }}{{ http_build_query(request()->except('brand', 'page')) ? '?' . http_build_query(request()->except('brand', 'page')) : '' }}"
+                                   class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ !request('brand') ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                                    All Brands
+                                </a>
+                                @foreach ($brands as $b)
+                                    <a href="{{ $route }}?{{ http_build_query(array_merge(request()->except('page'), ['brand' => $b])) }}"
+                                       class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ request('brand') === $b ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                                        {{ $b }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     {{-- Filter --}}
                     <form method="GET" action="{{ route('shop.index') }}" class="mt-6 space-y-4">
                         @if (request('search'))
                             <input type="hidden" name="search" value="{{ request('search') }}">
+                        @endif
+                        @if (request('brand'))
+                            <input type="hidden" name="brand" value="{{ request('brand') }}">
                         @endif
                         <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-3">Price Range</h3>
                         <div class="flex gap-2">
@@ -48,8 +65,9 @@
                     <div class="mt-6">
                         <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-3">Sort By</h3>
                         <div class="space-y-1">
+                            @php $sortRoute = isset($category) ? route('shop.category', $category) : route('shop.index'); @endphp
                             @foreach (['latest' => 'Latest', 'price_asc' => 'Price: Low to High', 'price_desc' => 'Price: High to Low', 'name' => 'Name'] as $key => $label)
-                                <a href="{{ route('shop.index', array_merge(request()->query(), ['sort' => $key])) }}" class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ request('sort', 'latest') === $key ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                                <a href="{{ $sortRoute }}?{{ http_build_query(array_merge(request()->except('page'), ['sort' => $key])) }}" class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ request('sort', 'latest') === $key ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
                                     {{ $label }}
                                 </a>
                             @endforeach

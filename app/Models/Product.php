@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class Product extends Model
 {
     protected $fillable = [
-        'category_id', 'name', 'slug', 'description', 'ingredients',
+        'category_id', 'name', 'brand', 'slug', 'description', 'ingredients',
         'price', 'sale_price', 'image', 'images', 'stock',
         'is_featured', 'is_active',
     ];
