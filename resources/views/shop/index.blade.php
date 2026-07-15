@@ -27,21 +27,20 @@
 
                     {{-- Brand Filter --}}
                     @if ($brands->isNotEmpty())
-                        @php $route = isset($category) ? route('shop.category', $category) : route('shop.index'); @endphp
                         <div class="mt-6">
                             <h3 class="text-xs tracking-widest uppercase text-gray-400 font-medium mb-3">Brand</h3>
-                            <div class="space-y-1">
-                                <a href="{{ $route }}{{ http_build_query(request()->except('brand', 'page')) ? '?' . http_build_query(request()->except('brand', 'page')) : '' }}"
-                                   class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ !request('brand') ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
-                                    All Brands
-                                </a>
+                            <select onchange="if (this.value) window.location.href = this.value"
+                                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all bg-white">
+                                <option value="">All Brands</option>
                                 @foreach ($brands as $b)
-                                    <a href="{{ $route }}?{{ http_build_query(array_merge(request()->except('page'), ['brand' => $b])) }}"
-                                       class="block px-3 py-1.5 text-sm rounded-lg transition-colors {{ request('brand') === $b ? 'bg-rose-50 text-rose-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
-                                        {{ $b }}
-                                    </a>
+                                    @php
+                                        $query = array_merge(request()->except('brand', 'page'), ['brand' => $b]);
+                                        $route = isset($category) ? route('shop.category', $category) : route('shop.index');
+                                        $url = $route . '?' . http_build_query($query);
+                                    @endphp
+                                    <option value="{{ $url }}" {{ request('brand') === $b ? 'selected' : '' }}>{{ $b }}</option>
                                 @endforeach
-                            </div>
+                            </select>
                         </div>
                     @endif
 

@@ -110,12 +110,7 @@ class ShopController extends Controller
 
     public function show(Product $product): View
     {
-        $related = Product::with('category')
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->take(4)
-            ->get();
+        $related = app(\App\Services\ProductRecommender::class)->recommend($product, 4);
 
         return view('shop.show', compact('product', 'related'));
     }

@@ -26,10 +26,36 @@
                     <a href="#contact" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Contact</a>
                 </div>
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('login') }}" class="hidden lg:inline-flex text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Sign In</a>
-                    <a href="{{ route('register') }}" class="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 bg-rose-800 hover:bg-rose-900 text-white text-sm tracking-wider uppercase rounded-full transition-all duration-300 shadow-lg shadow-rose-900/20 hover:shadow-rose-900/30">
-                        Get Started
-                    </a>
+                    @auth
+                        <div class="hidden lg:flex items-center gap-6">
+                            <a href="{{ route('cart.index') }}" class="text-sm tracking-widest uppercase text-stone-500 hover:text-rose-700 transition-colors duration-300">Cart</a>
+                            <a href="{{ route('orders.index') }}" class="text-sm tracking-widest uppercase text-stone-500 hover:text-rose-700 transition-colors duration-300">Orders</a>
+                            <x-dropdown align="right" width="48">
+                                <x-slot name="trigger">
+                                    <button class="flex items-center gap-2.5 px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white text-sm font-medium rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                        <div class="w-5 h-5 rounded-full bg-rose-400 flex items-center justify-center text-[10px] font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                                        <span>{{ Auth::user()->name }}</span>
+                                        <svg class="fill-current h-3.5 w-3.5 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    @if (Auth::user()->isAdmin() || Auth::user()->isStaff())
+                                        <x-dropdown-link :href="route('admin.dashboard')">{{ __('Admin') }}</x-dropdown-link>
+                                    @endif
+                                    <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="hidden lg:inline-flex text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Sign In</a>
+                        <a href="{{ route('register') }}" class="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 bg-rose-800 hover:bg-rose-900 text-white text-sm tracking-wider uppercase rounded-full transition-all duration-300 shadow-lg shadow-rose-900/20 hover:shadow-rose-900/30">
+                            Get Started
+                        </a>
+                    @endauth
                     <button @click="mobileOpen = !mobileOpen" class="lg:hidden relative w-8 h-8 flex items-center justify-center">
                         <span class="block w-5 h-0.5 bg-stone-700 rounded-full transition-all duration-300" :class="mobileOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'"></span>
                         <span class="block w-5 h-0.5 bg-stone-700 rounded-full transition-all duration-300" :class="mobileOpen ? 'opacity-0' : ''"></span>
@@ -47,8 +73,30 @@
                 <a @click="mobileOpen = false" href="#featured" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Featured</a>
                 <a @click="mobileOpen = false" href="#contact" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Contact</a>
                 <div class="pt-4 border-t border-stone-100">
-                    <a href="{{ route('login') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-3">Sign In</a>
-                    <a href="{{ route('register') }}" class="block w-full text-center px-6 py-3 bg-rose-800 text-white text-sm tracking-wider uppercase rounded-full">Get Started</a>
+                    @auth
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 px-4 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-200 flex items-center justify-center text-sm font-bold text-rose-800">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                                <div>
+                                    <p class="text-sm font-medium text-stone-900">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-stone-400">{{ Auth::user()->email }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('cart.index') }}" class="block w-full text-center px-6 py-3 bg-stone-900 text-white text-sm tracking-wider uppercase rounded-full mb-2">Cart</a>
+                            <a href="{{ route('orders.index') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Orders</a>
+                            @if (Auth::user()->isAdmin() || Auth::user()->isStaff())
+                                <a href="{{ route('admin.dashboard') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Admin</a>
+                            @endif
+                            <a href="{{ route('profile.edit') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Profile</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full">Log Out</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-3">Sign In</a>
+                        <a href="{{ route('register') }}" class="block w-full text-center px-6 py-3 bg-rose-800 text-white text-sm tracking-wider uppercase rounded-full">Get Started</a>
+                    @endauth
                 </div>
             </div>
         </div>

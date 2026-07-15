@@ -156,11 +156,19 @@ class ProductSeeder extends Seeder
             'https://images.unsplash.com/photo-1541643600914-78b084683601?w=600&h=400&fit=crop',
         ];
 
+        $brandByCategory = [
+            'skincare' => 'Luminous',
+            'makeup' => 'Velvet',
+            'fragrance' => 'Bloom',
+            'body-care' => 'Botanica',
+        ];
+
         foreach ($products as $i => $product) {
             $slug = str($product['name'])->slug();
             Product::create([
                 'category_id' => $categories[$product['category_slug']],
                 'name' => $product['name'],
+                'brand' => $brandByCategory[$product['category_slug']] ?? 'Rose Venus',
                 'slug' => $slug,
                 'description' => $product['description'],
                 'ingredients' => $product['ingredients'] ?? null,
