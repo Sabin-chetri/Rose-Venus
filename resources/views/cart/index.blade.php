@@ -26,7 +26,7 @@
                             <div class="flex items-center gap-4 p-6">
                                 <a href="{{ route('shop.show', $item->product) }}" class="w-20 h-20 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100 flex-shrink-0 overflow-hidden">
                                     @if ($item->product->image)
-                                        <img src="{{ Storage::url($item->product->image) }}" alt="" class="w-full h-full object-cover">
+                                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <div class="w-8 h-10 rounded-full bg-gradient-to-b from-rose-200 to-rose-300"></div>

@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
     protected $fillable = [
-        'category_id', 'name', 'slug', 'description', 'ingredients',
+        'category_id', 'name', 'brand', 'slug', 'description', 'ingredients',
         'price', 'sale_price', 'image', 'images', 'stock',
         'is_featured', 'is_active',
     ];
@@ -55,6 +56,17 @@ class Product extends Model
     public function hasSale(): bool
     {
         return !is_null($this->sale_price) && $this->sale_price < $this->price;
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        if (!$this->image) {
+            return '';
+        }
+        if (str_starts_with($this->image, 'http')) {
+            return $this->image;
+        }
+        return Storage::url($this->image);
     }
 
     protected static function booted(): void

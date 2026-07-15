@@ -35,6 +35,7 @@ Route::middleware(['auth', 'role:admin,staff'])->prefix('admin')->name('admin.')
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/category/{category:slug}', [ShopController::class, 'category'])->name('shop.category');
+Route::get('/collections/{category:slug}', [ShopController::class, 'collection'])->name('shop.collection');
 Route::get('/shop/{product:slug}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::middleware('auth')->group(function () {

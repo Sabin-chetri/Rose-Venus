@@ -19,42 +19,43 @@
                     <span class="text-2xl lg:text-3xl font-[Playfair_Display] font-light tracking-wider text-stone-700">Venus</span>
                 </a>
                 <div class="hidden lg:flex items-center gap-10">
+                    <a href="{{ route('shop.index') }}" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Shop</a>
                     <a href="#collections" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Collections</a>
                     <a href="#about" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Our Story</a>
                     <a href="#featured" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Featured</a>
                     <a href="#contact" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Contact</a>
                 </div>
                 <div class="flex items-center gap-4">
-                    @if (Route::has('login'))
-                        @auth
-                            <div class="hidden lg:flex items-center gap-3">
-                                <a href="{{ route('shop.index') }}" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Shop</a>
-                                @if (Auth::user()->isAdmin() || Auth::user()->isStaff())
-                                    <a href="{{ route('admin.dashboard') }}" class="text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Admin</a>
-                                @endif
-                                <x-dropdown align="right" width="48">
-                                    <x-slot name="trigger">
-                                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white text-sm font-medium rounded-full transition-all duration-300 shadow-lg hover:-translate-y-0.5">
-                                            <span>{{ Auth::user()->name }}</span>
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                                        </button>
-                                    </x-slot>
-                                    <x-slot name="content">
-                                        <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
-                                        </form>
-                                    </x-slot>
-                                </x-dropdown>
-                            </div>
-                        @else
-                            <a href="{{ route('login') }}" class="hidden lg:inline-flex text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Sign In</a>
-                            <a href="{{ route('register') }}" class="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 bg-rose-800 hover:bg-rose-900 text-white text-sm tracking-wider uppercase rounded-full transition-all duration-300 shadow-lg shadow-rose-900/20 hover:shadow-rose-900/30">
-                                Get Started
-                            </a>
-                        @endauth
-                    @endif
+                    @auth
+                        <div class="hidden lg:flex items-center gap-6">
+                            <a href="{{ route('cart.index') }}" class="text-sm tracking-widest uppercase text-stone-500 hover:text-rose-700 transition-colors duration-300">Cart</a>
+                            <a href="{{ route('orders.index') }}" class="text-sm tracking-widest uppercase text-stone-500 hover:text-rose-700 transition-colors duration-300">Orders</a>
+                            <x-dropdown align="right" width="48">
+                                <x-slot name="trigger">
+                                    <button class="flex items-center gap-2.5 px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white text-sm font-medium rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                        <div class="w-5 h-5 rounded-full bg-rose-400 flex items-center justify-center text-[10px] font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                                        <span>{{ Auth::user()->name }}</span>
+                                        <svg class="fill-current h-3.5 w-3.5 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                    </button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    @if (Auth::user()->isAdmin() || Auth::user()->isStaff())
+                                        <x-dropdown-link :href="route('admin.dashboard')">{{ __('Admin') }}</x-dropdown-link>
+                                    @endif
+                                    <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="hidden lg:inline-flex text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700 transition-colors duration-300">Sign In</a>
+                        <a href="{{ route('register') }}" class="hidden lg:inline-flex items-center gap-2 px-6 py-2.5 bg-rose-800 hover:bg-rose-900 text-white text-sm tracking-wider uppercase rounded-full transition-all duration-300 shadow-lg shadow-rose-900/20 hover:shadow-rose-900/30">
+                            Get Started
+                        </a>
+                    @endauth
                     <button @click="mobileOpen = !mobileOpen" class="lg:hidden relative w-8 h-8 flex items-center justify-center">
                         <span class="block w-5 h-0.5 bg-stone-700 rounded-full transition-all duration-300" :class="mobileOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'"></span>
                         <span class="block w-5 h-0.5 bg-stone-700 rounded-full transition-all duration-300" :class="mobileOpen ? 'opacity-0' : ''"></span>
@@ -66,29 +67,36 @@
         {{-- Mobile Menu --}}
         <div x-show="mobileOpen" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" @click.outside="mobileOpen = false" class="lg:hidden bg-white/95 backdrop-blur-xl border-t border-stone-100 shadow-xl">
             <div class="px-6 py-8 space-y-6">
+                <a @click="mobileOpen = false" href="{{ route('shop.index') }}" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Shop</a>
                 <a @click="mobileOpen = false" href="#collections" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Collections</a>
                 <a @click="mobileOpen = false" href="#about" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Our Story</a>
                 <a @click="mobileOpen = false" href="#featured" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Featured</a>
                 <a @click="mobileOpen = false" href="#contact" class="block text-sm tracking-widest uppercase text-stone-600 hover:text-rose-700">Contact</a>
                 <div class="pt-4 border-t border-stone-100">
-                    @if (Route::has('login'))
-                        @auth
-                            <p class="text-sm font-medium text-stone-900 mb-3">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-stone-400 mb-4">{{ Auth::user()->email }}</p>
-                            <a href="{{ route('shop.index') }}" @click="mobileOpen = false" class="block w-full text-center px-6 py-3 bg-stone-900 text-white text-sm tracking-wider uppercase rounded-full mb-2">Shop</a>
+                    @auth
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 px-4 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-200 flex items-center justify-center text-sm font-bold text-rose-800">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                                <div>
+                                    <p class="text-sm font-medium text-stone-900">{{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-stone-400">{{ Auth::user()->email }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('cart.index') }}" class="block w-full text-center px-6 py-3 bg-stone-900 text-white text-sm tracking-wider uppercase rounded-full mb-2">Cart</a>
+                            <a href="{{ route('orders.index') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Orders</a>
                             @if (Auth::user()->isAdmin() || Auth::user()->isStaff())
-                                <a href="{{ route('admin.dashboard') }}" @click="mobileOpen = false" class="block w-full text-center px-6 py-3 bg-rose-800 text-white text-sm tracking-wider uppercase rounded-full mb-2">Admin</a>
+                                <a href="{{ route('admin.dashboard') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Admin</a>
                             @endif
-                            <a href="{{ route('profile.edit') }}" @click="mobileOpen = false" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Profile</a>
+                            <a href="{{ route('profile.edit') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-2">Profile</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full">Log Out</button>
                             </form>
-                        @else
-                            <a href="{{ route('login') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-3">Sign In</a>
-                            <a href="{{ route('register') }}" class="block w-full text-center px-6 py-3 bg-rose-800 text-white text-sm tracking-wider uppercase rounded-full">Get Started</a>
-                        @endauth
-                    @endif
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="block w-full text-center px-6 py-3 border border-stone-200 text-stone-700 text-sm tracking-wider uppercase rounded-full mb-3">Sign In</a>
+                        <a href="{{ route('register') }}" class="block w-full text-center px-6 py-3 bg-rose-800 text-white text-sm tracking-wider uppercase rounded-full">Get Started</a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -239,47 +247,38 @@
             </div>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                {{-- Collection 1 --}}
-                <a href="#" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-50 to-rose-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                {{-- Collection 1: Skincare --}}
+                <a href="{{ route('shop.collection', 'skincare') }}" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-50 to-rose-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS49gH_WAaYqQ4c3jsGFPt6RcVolVV3zvyUpvKsZzCmqQ&s=10" alt="Skincare" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-rose-900/80 via-rose-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 flex items-center justify-center p-8">
-                        <div class="w-24 h-32 bg-gradient-to-b from-rose-300 via-rose-400 to-rose-500 rounded-full shadow-xl shadow-rose-900/20 group-hover:scale-110 transition-transform duration-500"></div>
-                    </div>
                     <div class="absolute bottom-0 inset-x-0 p-6 lg:p-8">
                         <span class="text-xs tracking-[0.2em] uppercase text-rose-200">Skincare</span>
                         <h3 class="mt-2 text-xl font-semibold text-white">Radiance<br>Serum</h3>
                     </div>
                 </a>
-                {{-- Collection 2 --}}
-                <a href="#" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                {{-- Collection 2: Makeup --}}
+                <a href="{{ route('shop.collection', 'makeup') }}" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/8103728/183668_103785.png" alt="Makeup" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 flex items-center justify-center p-8">
-                        <div class="w-28 h-20 bg-gradient-to-br from-amber-200 via-amber-300 to-amber-400 rounded-2xl shadow-xl shadow-amber-900/20 group-hover:scale-110 transition-transform duration-500"></div>
-                    </div>
                     <div class="absolute bottom-0 inset-x-0 p-6 lg:p-8">
                         <span class="text-xs tracking-[0.2em] uppercase text-amber-200">Makeup</span>
                         <h3 class="mt-2 text-xl font-semibold text-white">Velvet<br>Matte</h3>
                     </div>
                 </a>
-                {{-- Collection 3 --}}
-                <a href="#" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-stone-50 to-stone-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                {{-- Collection 3: Fragrance --}}
+                <a href="{{ route('shop.collection', 'fragrance') }}" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-stone-50 to-stone-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVEpwN1ZRsg2-EFxOR3eBn0X0r8xrOVPfqtJMsIQWYn88BOv6od2uDhek&s=10" alt="Fragrance" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 flex items-center justify-center p-8">
-                        <div class="w-20 h-28 bg-gradient-to-b from-stone-300 via-stone-400 to-stone-500 rounded-full shadow-xl shadow-stone-900/20 group-hover:scale-110 transition-transform duration-500"></div>
-                    </div>
                     <div class="absolute bottom-0 inset-x-0 p-6 lg:p-8">
                         <span class="text-xs tracking-[0.2em] uppercase text-stone-200">Fragrance</span>
                         <h3 class="mt-2 text-xl font-semibold text-white">Midnight<br>Bloom</h3>
                     </div>
                 </a>
-                {{-- Collection 4 --}}
-                <a href="#" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-green-50 to-green-100 shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-green-900/80 via-green-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 flex items-center justify-center p-8">
-                        <div class="w-16 h-24 bg-gradient-to-b from-green-200 via-green-300 to-green-400 rounded-full shadow-xl shadow-green-900/20 group-hover:scale-110 transition-transform duration-500"></div>
-                    </div>
+                {{-- Collection 4: Body Care --}}
+                <a href="{{ route('shop.collection', 'body-care') }}" class="group relative aspect-[3/4] rounded-3xl overflow-hidden bg-gradient-to-br from-green-50 to-green-100 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="https://img.magnific.com/premium-photo/skincare-products-isolated-white-background_621955-41920.jpg?semt=ais_hybrid&w=740&q=80" alt="Body Care" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     <div class="absolute bottom-0 inset-x-0 p-6 lg:p-8">
-                        <span class="text-xs tracking-[0.2em] uppercase text-green-200">Body Care</span>
+                        <span class="text-xs tracking-[0.2em] uppercase text-emerald-700">Body Care</span>
                         <h3 class="mt-2 text-xl font-semibold text-white">Botanical<br>Mist</h3>
                     </div>
                 </a>

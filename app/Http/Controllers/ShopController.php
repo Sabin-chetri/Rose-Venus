@@ -11,14 +11,20 @@ class ShopController extends Controller
     public function index(): View
     {
         $categories = Category::where('is_active', true)->get();
+        $brands = Product::where('is_active', true)->whereNotNull('brand')->distinct()->pluck('brand')->sort();
 
         $query = Product::with('category')->where('is_active', true);
 
         if ($search = request('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('brand', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
             });
+        }
+
+        if ($brand = request('brand')) {
+            $query->where('brand', $brand);
         }
 
         if ($min = request('min_price')) {
@@ -43,14 +49,15 @@ class ShopController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
-        return view('shop.index', compact('categories', 'products'));
+        return view('shop.index', compact('categories', 'brands', 'products'));
     }
 
     public function category(Category $category): View
     {
         $categories = Category::where('is_active', true)->get();
+        $brands = Product::where('is_active', true)->whereNotNull('brand')->distinct()->pluck('brand')->sort();
 
         $query = Product::with('category')
             ->where('category_id', $category->id)
@@ -59,8 +66,13 @@ class ShopController extends Controller
         if ($search = request('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('brand', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
             });
+        }
+
+        if ($brand = request('brand')) {
+            $query->where('brand', $brand);
         }
 
         $sort = request('sort', 'latest');
@@ -71,19 +83,34 @@ class ShopController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
-        return view('shop.index', compact('categories', 'products', 'category'));
+        return view('shop.index', compact('categories', 'brands', 'products', 'category'));
+    }
+
+    public function collection(Category $category): View
+    {
+        $categories = Category::where('is_active', true)->get();
+
+        $featured = Product::with('category')
+            ->where('category_id', $category->id)
+            ->where('is_active', true)
+            ->where('is_featured', true)
+            ->take(4)
+            ->get();
+
+        $products = Product::with('category')
+            ->where('category_id', $category->id)
+            ->where('is_active', true)
+            ->latest()
+            ->paginate(10);
+
+        return view('shop.collection', compact('category', 'categories', 'featured', 'products'));
     }
 
     public function show(Product $product): View
     {
-        $related = Product::with('category')
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->take(4)
-            ->get();
+        $related = app(\App\Services\ProductRecommender::class)->recommend($product, 4);
 
         return view('shop.show', compact('product', 'related'));
     }
